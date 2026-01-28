@@ -238,7 +238,7 @@ const MainForm = () => {
             <div className="header-outline">
                 <div className="title-row">
                     <div className="logo-area">
-                        <img src="/logo.png" alt="Qatar Executive Logo" />
+                        <img src="./logo.png" alt="Qatar Executive Logo" />
                     </div>
                     <div className="title-text">SPECIAL LOAD - NOTIFICATION TO CAPTAIN</div>
                 </div>

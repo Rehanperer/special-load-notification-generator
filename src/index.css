@@ -56,12 +56,11 @@ body {
 }
 
 .logo-area {
-  width: 180px;
+  width: 240px;
 }
 
 .logo-area img {
-  height: 55px;
-  /* Reduced logo size */
+  height: 75px;
   width: auto;
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRef } from 'react';
 import { Download } from 'lucide-react';
 import { dangerousGoodsList } from '../data/dangerousGoodsData';
 import SignaturePad from './SignaturePad';
@@ -19,6 +20,38 @@ const MainForm = () => {
         docCode: 'QE/GOPS/01',
         footerDate: '24 APR 2024'
     });
+
+    const datePickerRef = useRef(null);
+
+    const formatDisplayDate = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        const day = String(d.getDate()).padStart(2, '0');
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
+
+    const formatPickerDate = (displayDate) => {
+        if (!displayDate) return '';
+        const parts = displayDate.split(' ');
+        if (parts.length !== 3) return '';
+        const day = parts[0];
+        const monthStr = parts[1].toUpperCase();
+        const year = parts[2];
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const month = String(months.indexOf(monthStr) + 1).padStart(2, '0');
+        if (month === '00') return '';
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleDateChange = (isoDate) => {
+        if (!isoDate) return;
+        const formatted = formatDisplayDate(isoDate);
+        setGeneralInfo(prev => ({ ...prev, date: formatted, footerDate: formatted }));
+    };
 
     const [dangerousGoods, setDangerousGoods] = useState(
         Array(5).fill(null).map(() => ({
@@ -254,7 +287,29 @@ const MainForm = () => {
                     </div>
                     <div className="grid-cell">
                         <label>Date</label>
-                        <input value={generalInfo.date} onChange={e => setGeneralInfo({ ...generalInfo, date: e.target.value })} />
+                        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                            <input
+                                value={generalInfo.date}
+                                readOnly
+                                onClick={() => datePickerRef.current?.showPicker()}
+                                style={{ cursor: 'pointer' }}
+                            />
+                            <input
+                                type="date"
+                                ref={datePickerRef}
+                                value={formatPickerDate(generalInfo.date)}
+                                onChange={(e) => handleDateChange(e.target.value)}
+                                style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    opacity: 0,
+                                    pointerEvents: 'none'
+                                }}
+                            />
+                        </div>
                     </div>
                     <div className="grid-cell">
                         <label>Aircraft Registration</label>

@@ -7,10 +7,21 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 const MainForm = () => {
+    const getTodayFormatted = () => {
+        const d = new Date();
+        const day = String(d.getDate()).padStart(2, '0');
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+        return `${day} ${month} ${year}`;
+    };
+
+    const today = getTodayFormatted();
+
     const [generalInfo, setGeneralInfo] = useState({
         loadingStation: '',
         flightNumber: '',
-        date: '24 APR 2024',
+        date: today,
         registration: '',
         preparedBy: '',
         evidenceText: 'There is no evidence that any damaged or leaking packages containing dangerous goods have been loaded on the aircraft.',
@@ -18,7 +29,7 @@ const MainForm = () => {
         distributionText: "Distribution: (1) Aircraft Captain (original) (2) Load sheet Ship's Satchel (1st copy) (3) Station File (2nd Copy)",
         revCode: 'REV 4.0',
         docCode: 'QE/GOPS/01',
-        footerDate: '24 APR 2024'
+        footerDate: today
     });
 
     const datePickerRef = useRef(null);

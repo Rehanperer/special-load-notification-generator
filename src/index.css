@@ -32,10 +32,38 @@ body {
   /* Stronger bottom buffer */
 }
 
+.actions-panel {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.no-caps {
+  text-transform: none !important;
+}
+
+.supervisor-sig-box {
+  min-height: 250px;
+}
+
 .sensitivity-header {
   text-align: right;
   font-size: 11px;
   margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-clear {
+  padding: 4px 10px;
+  font-size: 11px;
+  background: #ffecb3;
+  border: 1px solid #ffcc80;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 /* Header Outer Border */
@@ -68,7 +96,7 @@ body {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -79,21 +107,21 @@ body {
 /* The Complex Info Grid */
 .info-grid-container {
   display: grid;
-  grid-template-columns: 2.8fr 1fr 1fr 1.3fr 2.5fr;
+  grid-template-columns: 2.8fr 1fr 1.3fr 1.3fr 2.5fr;
   grid-template-rows: auto auto;
 }
 
 .grid-cell {
   border-right: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  padding: 1px 4px;
+  padding: 2px 6px;
   /* Reduced padding */
   display: flex;
   flex-direction: column;
   justify-content: center;
   /* Ensure content is vertically centered but not stretched */
-  min-height: 45px;
-  /* Increased from 40 */
+  min-height: 55px;
+  /* Increased from 45 */
   overflow: visible;
   /* Prevent clipping */
 }
@@ -110,19 +138,18 @@ body {
   border-bottom: 1px solid var(--border-color);
   background-color: #fff;
   font-weight: bold;
-  font-size: 13px;
-  padding: 2px 6px;
+  font-size: 16px;
+  padding: 4px 8px;
   display: flex;
   align-items: center;
-  min-height: 28px;
-  /* Reduced from 35 */
+  min-height: 35px;
 }
 
 /* Prepared By Cell (spans 2 rows) */
 .prepared-by-cell {
   grid-column: 5 / 6;
   grid-row: 1 / 3;
-  padding: 2px 5px;
+  padding: 4px 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -131,13 +158,14 @@ body {
 
 .prepared-by-header {
   display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .prepared-by-header label {
   white-space: nowrap;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .prepared-by-input {
@@ -145,13 +173,15 @@ body {
   border: none;
   background: var(--highlight-color);
   font-family: Arial, sans-serif;
-  font-size: 13px;
+  font-size: 16px;
   width: 100%;
+  padding: 4px 0;
+  text-transform: uppercase;
 }
 
 /* Forms general */
 .grid-cell label {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: bold;
   /* Added for visibility */
   margin-bottom: 1px;
@@ -162,20 +192,21 @@ body {
   background: var(--highlight-color);
   font-family: Arial,
     sans-serif;
-  font-size: 14px;
+  font-size: 17px;
   width: 100%;
   height: auto;
   /* Remove fixed/percent height */
   padding: 4px 0;
   /* Add space */
   display: block;
+  text-transform: uppercase;
 }
 
 /* Tables */
 .section-header-row {
   border: 1px solid var(--border-color);
-  padding: 2px 6px;
-  font-size: 13px;
+  padding: 4px 8px;
+  font-size: 16px;
   font-weight: bold;
   background-color: #fff;
   margin-top: 15px;
@@ -195,23 +226,25 @@ table {
 th,
 td {
   border: 1px solid var(--border-color);
-  padding: 4px 4px;
+  padding: 4px;
   /* Increased padding */
   font-family: Arial, sans-serif;
-  font-size: 10px;
+  font-size: 12.5px;
   text-align: center;
   background: #fff;
-  line-height: 1.3;
-  height: 36px;
+  line-height: 1.2;
+  min-height: 40px;
   /* Fixed height for reliable layout */
   vertical-align: middle;
   overflow: visible;
 }
 
 th {
-  font-weight: normal;
-  vertical-align: top;
-  padding-top: 2px;
+  font-weight: bold;
+  vertical-align: middle;
+  padding: 6px 2px;
+  background-color: #f5f5f5;
+  font-size: 11px;
 }
 
 .input-elem {
@@ -219,28 +252,28 @@ th {
   border: none;
   background: var(--highlight-color);
   font-family: Arial, sans-serif;
-  font-size: 11.5px;
+  font-size: 14px;
   /* Slightly larger */
-  text-align: center;
   text-align: center;
   padding: 4px 0;
   height: auto;
   /* Remove 100% */
+  text-transform: uppercase;
 }
 
 .select-elem {
   width: 100%;
   border: none;
   background: var(--highlight-color);
-  font-size: 10px;
-  padding: 0;
+  font-size: 13px;
+  padding: 4px;
 }
 
 .row-autofill-info {
   text-align: left;
   padding-left: 2px;
   font-weight: bold;
-  font-size: 9.5px;
+  font-size: 12px;
 }
 
 /* Footer structure v6 */
@@ -248,10 +281,10 @@ th {
   border: 1px solid var(--border-color);
   border-top: none;
   display: grid;
-  grid-template-columns: 3.2fr 1.8fr 5fr;
-  /* 3.2 for Supervisor/Evidence, 1.8 for Captain, 5 for Other Info */
-  min-height: 120px;
-  /* Increased from 100 */
+  grid-template-columns: 3.2fr 2.5fr 4.3fr;
+  /* Adjusted for bigger fonts */
+  min-height: auto;
+  /* Allow content to define height */
 }
 
 .footer-col {
@@ -265,8 +298,8 @@ th {
 }
 
 .evidence-box {
-  height: 25px;
-  padding: 2px 6px;
+  height: 40px;
+  padding: 4px 8px;
 }
 
 .supervisor-sig-box {
@@ -275,14 +308,14 @@ th {
   align-items: flex-start;
   gap: 15px;
   padding: 0 5px 5px 0;
-  min-height: 80px;
-  /* More height */
+  min-height: 300px;
+  /* Target space for signature */
   flex-grow: 1;
 }
 
 .footer-col.vertical-split>div:first-child {
-  flex-basis: 30%;
-  padding: 2px 6px;
+  flex-basis: 35%;
+  padding: 4px 8px;
 }
 
 .footer-col.vertical-split>div:last-child {
@@ -298,7 +331,7 @@ th {
   border: none;
   background: #fff;
   font-family: Arial, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   /* Slightly smaller text */
   resize: none;
 }
@@ -306,7 +339,7 @@ th {
 .supervisor-sig-box .footer-label-bold {
   margin-top: 10px;
   font-family: Arial, sans-serif;
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: bold;
   text-transform: uppercase;
   line-height: 1.1;
@@ -315,16 +348,18 @@ th {
 
 .footer-label-normal {
   font-family: Arial, sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   /* Increased */
   font-weight: bold;
   /* Added */
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .mini-sig {
   margin-top: 10px;
-  height: 50px !important;
+  height: auto !important;
+  /* Allow it to fill the container */
+  min-height: 250px;
 }
 
 .footer-sig-pad-box {
@@ -339,8 +374,9 @@ th {
   padding: 2px 6px;
   display: flex;
   flex-direction: column;
-  min-height: 80px;
-  /* Match supervisor-sig-box row height indirectly */
+  min-height: 120px;
+  /* Reduced from previous stretched state */
+  height: auto;
 }
 
 .other-info-ta {
@@ -348,8 +384,8 @@ th {
   border: none;
   background: var(--highlight-color);
   font-family: Arial, sans-serif;
-  font-size: 13px;
-  /* Increased from 8.5px */
+  font-size: 15px;
+  /* Increased from 13px */
   resize: none;
   width: 100%;
 }
@@ -358,8 +394,9 @@ th {
 .dist-line-area {
   text-align: center;
   font-family: Arial, sans-serif;
-  font-size: 10px;
-  padding: 4px 0;
+  font-size: 12px;
+  /* Increased from 10px */
+  padding: 6px 0;
   border: 1px solid var(--border-color);
   border-top: none;
 }
@@ -374,7 +411,8 @@ th {
 }
 
 .bottom-meta-row div {
-  padding: 2px 5px;
+  padding: 4px 8px;
+  /* Increased padding */
   display: flex;
   align-items: center;
 }
@@ -396,7 +434,8 @@ th {
   width: auto;
   border: none;
   font-family: Arial, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
+  /* Increased from 10px */
   background: transparent;
 }
 

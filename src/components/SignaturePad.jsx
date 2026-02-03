@@ -1,8 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 
-const SignaturePad = ({ label }) => {
+const SignaturePad = forwardRef(({ label }, ref) => {
     const sigCanvas = useRef({});
+
+    useImperativeHandle(ref, () => ({
+        clear: () => {
+            sigCanvas.current.clear();
+        }
+    }));
 
     const clear = () => {
         sigCanvas.current.clear();
@@ -37,6 +43,6 @@ const SignaturePad = ({ label }) => {
             </button>
         </div>
     );
-};
+});
 
 export default SignaturePad;

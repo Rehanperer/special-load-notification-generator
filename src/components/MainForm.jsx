@@ -18,21 +18,35 @@ const MainForm = () => {
 
     const today = getTodayFormatted();
 
-    const [generalInfo, setGeneralInfo] = useState({
+    const initialGeneralInfo = {
         loadingStation: '',
         flightNumber: '',
         date: today,
         registration: '',
         preparedBy: '',
-        evidenceText: 'There is no evidence that any damaged or leaking packages containing dangerous goods have been loaded on the aircraft.',
+        evidenceText: 'THERE IS NO EVIDENCE THAT ANY DAMAGED OR LEAKING PACKAGES CONTAINING DANGEROUS GOODS HAVE BEEN LOADED ON THE AIRCRAFT.',
         otherInfo: '',
-        distributionText: "Distribution: (1) Aircraft Captain (original) (2) Load sheet Ship's Satchel (1st copy) (3) Station File (2nd Copy)",
+        distributionText: "DISTRIBUTION: (1) AIRCRAFT CAPTAIN (ORIGINAL) (2) LOAD SHEET SHIP'S SATCHEL (1ST COPY) (3) STATION FILE (2ND COPY)",
         revCode: 'REV 4.0',
         docCode: 'QE/GOPS/01',
         footerDate: today
-    });
+    };
+
+    const [generalInfo, setGeneralInfo] = useState(initialGeneralInfo);
 
     const datePickerRef = useRef(null);
+    const supervisorSigRef = useRef(null);
+    const captainSigRef = useRef(null);
+
+    const handleClearAll = () => {
+        if (window.confirm("This action will clear all details. Do you want to proceed?")) {
+            setGeneralInfo(initialGeneralInfo);
+            setDangerousGoods(initialDG);
+            setOtherLoads(initialOther);
+            supervisorSigRef.current?.clear();
+            captainSigRef.current?.clear();
+        }
+    };
 
     const formatDisplayDate = (dateStr) => {
         if (!dateStr) return '';
@@ -64,40 +78,40 @@ const MainForm = () => {
         setGeneralInfo(prev => ({ ...prev, date: formatted, footerDate: formatted }));
     };
 
-    const [dangerousGoods, setDangerousGoods] = useState(
-        Array(5).fill(null).map(() => ({
-            unloadingStation: '',
-            awbNumber: '',
-            shippingName: '',
-            classDiv: '',
-            unNumber: '',
-            subRisk: '',
-            pkgCount: '',
-            netQty: '',
-            radioCat: '',
-            pkgGroup: '',
-            code: '',
-            cao: '',
-            ergCode: '',
-            uldId: '',
-            cptPos: '',
-            selectedIdx: ''
-        }))
-    );
+    const initialDG = Array(5).fill(null).map(() => ({
+        unloadingStation: '',
+        awbNumber: '',
+        shippingName: '',
+        classDiv: '',
+        unNumber: '',
+        subRisk: '',
+        pkgCount: '',
+        netQty: '',
+        radioCat: '',
+        pkgGroup: '',
+        code: '',
+        cao: '',
+        ergCode: '',
+        uldId: '',
+        cptPos: '',
+        selectedIdx: ''
+    }));
 
-    const [otherLoads, setOtherLoads] = useState(
-        Array(4).fill(null).map(() => ({
-            unloadingStation: '',
-            awbNumber: '',
-            description: '',
-            pkgCount: '',
-            quantity: '',
-            suppInfo: '',
-            code: '',
-            uldId: '',
-            cptPos: ''
-        }))
-    );
+    const [dangerousGoods, setDangerousGoods] = useState(initialDG);
+
+    const initialOther = Array(4).fill(null).map(() => ({
+        unloadingStation: '',
+        awbNumber: '',
+        description: '',
+        pkgCount: '',
+        quantity: '',
+        suppInfo: '',
+        code: '',
+        uldId: '',
+        cptPos: ''
+    }));
+
+    const [otherLoads, setOtherLoads] = useState(initialOther);
 
     const handleDGSelect = (rowIndex, selectedIdx) => {
         if (!selectedIdx) {
@@ -122,8 +136,8 @@ const MainForm = () => {
             const newDG = [...dangerousGoods];
             newDG[rowIndex] = {
                 ...newDG[rowIndex],
-                shippingName: item.properShippingName,
-                classDiv: item.classOrDiv,
+                shippingName: item.properShippingName.toUpperCase(),
+                classDiv: item.classOrDiv.split('/')[0], // Take first part if needed, or keep as is
                 unNumber: item.unNumber,
                 subRisk: item.subRisk,
                 pkgGroup: item.unPkgGroup,
@@ -136,13 +150,15 @@ const MainForm = () => {
 
     const updateDGField = (rowIndex, field, value) => {
         const newDG = [...dangerousGoods];
-        newDG[rowIndex][field] = value;
+        // Exception: Last row (index 4) does NOT auto-capitalize
+        const finalValue = rowIndex === 4 ? value : value.toUpperCase();
+        newDG[rowIndex][field] = finalValue;
         setDangerousGoods(newDG);
     };
 
     const updateOtherField = (rowIndex, field, value) => {
         const newOther = [...otherLoads];
-        newOther[rowIndex][field] = value;
+        newOther[rowIndex][field] = value.toUpperCase();
         setOtherLoads(newOther);
     };
 
@@ -179,6 +195,12 @@ const MainForm = () => {
         // 2. Transform INPUTs to DIVs (Text Visibility Fix)
         const inputs = element.querySelectorAll('input');
         inputs.forEach(input => {
+            // SKIP hidden date inputs and hidden helper inputs
+            if (input.type === 'date' || input.style.opacity === '0' || input.style.zIndex === '1') {
+                input.remove();
+                return;
+            }
+
             const div = document.createElement('div');
             const val = input.value || '';
             div.textContent = val;
@@ -189,7 +211,7 @@ const MainForm = () => {
             div.style.background = 'transparent';
             div.style.backgroundColor = 'transparent';
             div.style.fontFamily = 'Arial, sans-serif';
-            div.style.fontSize = input.style.fontSize || '11px';
+            div.style.fontSize = input.style.fontSize || '13px';
             div.style.textAlign = input.style.textAlign || 'center';
             div.style.width = '100%';
             div.style.padding = '4px 0';
@@ -214,7 +236,7 @@ const MainForm = () => {
             div.style.background = 'transparent';
             div.style.backgroundColor = 'transparent';
             div.style.fontFamily = 'Arial, sans-serif';
-            div.style.fontSize = '11px';
+            div.style.fontSize = '12px';
             div.style.width = '100%';
             div.style.height = 'auto';
             div.style.overflow = 'visible';
@@ -222,6 +244,13 @@ const MainForm = () => {
             if (textarea.parentNode) {
                 textarea.parentNode.replaceChild(div, textarea);
             }
+        });
+
+        // Add explicit spacing for PDF headers
+        const sectionHeaders = element.querySelectorAll('.section-header-row');
+        sectionHeaders.forEach(header => {
+            header.style.marginTop = '25px';
+            header.style.marginBottom = '5px';
         });
 
         // 4. Aggressively Remove Highlights from all grid cells and inputs
@@ -277,7 +306,10 @@ const MainForm = () => {
 
     return (
         <div className="ipad-container" id="printable-form">
-            <div className="sensitivity-header">Sensitivity: Internal</div>
+            <div className="sensitivity-header">
+                <button className="btn-clear no-print" onClick={handleClearAll}>Clear All</button>
+                <span>Sensitivity: Internal</span>
+            </div>
 
             <div className="header-outline">
                 <div className="title-row">
@@ -290,11 +322,11 @@ const MainForm = () => {
                 <div className="info-grid-container">
                     <div className="grid-cell">
                         <label>Station of Loading</label>
-                        <input value={generalInfo.loadingStation} onChange={e => setGeneralInfo({ ...generalInfo, loadingStation: e.target.value })} />
+                        <input value={generalInfo.loadingStation} onChange={e => setGeneralInfo({ ...generalInfo, loadingStation: e.target.value.toUpperCase() })} />
                     </div>
                     <div className="grid-cell">
                         <label>Flight Number</label>
-                        <input value={generalInfo.flightNumber} onChange={e => setGeneralInfo({ ...generalInfo, flightNumber: e.target.value })} />
+                        <input value={generalInfo.flightNumber} onChange={e => setGeneralInfo({ ...generalInfo, flightNumber: e.target.value.toUpperCase() })} />
                     </div>
                     <div className="grid-cell">
                         <label>Date</label>
@@ -317,14 +349,15 @@ const MainForm = () => {
                                     width: '100%',
                                     height: '100%',
                                     opacity: 0,
-                                    pointerEvents: 'none'
+                                    pointerEvents: 'auto',
+                                    zIndex: 1
                                 }}
                             />
                         </div>
                     </div>
                     <div className="grid-cell">
                         <label>Aircraft Registration</label>
-                        <input value={generalInfo.registration} onChange={e => setGeneralInfo({ ...generalInfo, registration: e.target.value })} />
+                        <input value={generalInfo.registration} onChange={e => setGeneralInfo({ ...generalInfo, registration: e.target.value.toUpperCase() })} />
                     </div>
 
                     <div className="prepared-by-cell">
@@ -333,7 +366,7 @@ const MainForm = () => {
                             <input
                                 className="prepared-by-input"
                                 value={generalInfo.preparedBy}
-                                onChange={e => setGeneralInfo({ ...generalInfo, preparedBy: e.target.value })}
+                                onChange={e => setGeneralInfo({ ...generalInfo, preparedBy: e.target.value.toUpperCase() })}
                             />
                         </div>
                     </div>
@@ -368,8 +401,8 @@ const MainForm = () => {
                 <tbody>
                     {dangerousGoods.map((row, idx) => (
                         <tr key={`dg-${idx}`}>
-                            <td><input className="input-elem" value={row.unloadingStation} onChange={e => updateDGField(idx, 'unloadingStation', e.target.value)} /></td>
-                            <td><input className="input-elem" value={row.awbNumber} onChange={e => updateDGField(idx, 'awbNumber', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.unloadingStation} onChange={e => updateDGField(idx, 'unloadingStation', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.awbNumber} onChange={e => updateDGField(idx, 'awbNumber', e.target.value)} /></td>
                             <td style={{ textAlign: 'left' }}>
                                 {idx < 4 ? (
                                     <>
@@ -380,14 +413,14 @@ const MainForm = () => {
                                         >
                                             <option value="">-- Select --</option>
                                             {dangerousGoodsList.map(item => (
-                                                <option key={item.index} value={item.index}>{item.properShippingName}</option>
+                                                <option key={item.index} value={item.index}>{item.properShippingName.toUpperCase()}</option>
                                             ))}
                                         </select>
                                         <div className="row-autofill-info print-only">{row.shippingName}</div>
                                     </>
                                 ) : (
                                     <input
-                                        className="input-elem"
+                                        className="input-elem no-caps"
                                         style={{ textAlign: 'left', paddingLeft: '2px' }}
                                         value={row.shippingName}
                                         onChange={e => updateDGField(idx, 'shippingName', e.target.value)}
@@ -395,27 +428,27 @@ const MainForm = () => {
                                 )}
                             </td>
                             <td>
-                                {idx < 4 ? row.classDiv : <input className="input-elem" value={row.classDiv} onChange={e => updateDGField(idx, 'classDiv', e.target.value)} />}
+                                {idx < 4 ? row.classDiv : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.classDiv} onChange={e => updateDGField(idx, 'classDiv', e.target.value)} />}
                             </td>
                             <td>
-                                {idx < 4 ? row.unNumber : <input className="input-elem" value={row.unNumber} onChange={e => updateDGField(idx, 'unNumber', e.target.value)} />}
+                                {idx < 4 ? row.unNumber : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.unNumber} onChange={e => updateDGField(idx, 'unNumber', e.target.value)} />}
                             </td>
                             <td>
-                                {idx < 4 ? row.subRisk : <input className="input-elem" value={row.subRisk} onChange={e => updateDGField(idx, 'subRisk', e.target.value)} />}
+                                {idx < 4 ? row.subRisk : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.subRisk} onChange={e => updateDGField(idx, 'subRisk', e.target.value)} />}
                             </td>
-                            <td><input className="input-elem" value={row.pkgCount} onChange={e => updateDGField(idx, 'pkgCount', e.target.value)} /></td>
-                            <td><input className="input-elem" value={row.netQty} onChange={e => updateDGField(idx, 'netQty', e.target.value)} /></td>
-                            <td><input className="input-elem" value={row.radioCat} onChange={e => updateDGField(idx, 'radioCat', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.pkgCount} onChange={e => updateDGField(idx, 'pkgCount', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.netQty} onChange={e => updateDGField(idx, 'netQty', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.radioCat} onChange={e => updateDGField(idx, 'radioCat', e.target.value)} /></td>
                             <td>
-                                {idx < 4 ? row.pkgGroup : <input className="input-elem" value={row.pkgGroup} onChange={e => updateDGField(idx, 'pkgGroup', e.target.value)} />}
+                                {idx < 4 ? row.pkgGroup : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.pkgGroup} onChange={e => updateDGField(idx, 'pkgGroup', e.target.value)} />}
                             </td>
-                            <td><input className="input-elem" value={row.code} onChange={e => updateDGField(idx, 'code', e.target.value)} /></td>
-                            <td><input className="input-elem" value={row.cao} onChange={e => updateDGField(idx, 'cao', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.code} onChange={e => updateDGField(idx, 'code', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.cao} onChange={e => updateDGField(idx, 'cao', e.target.value)} /></td>
                             <td>
-                                {idx < 4 ? row.ergCode : <input className="input-elem" value={row.ergCode} onChange={e => updateDGField(idx, 'ergCode', e.target.value)} />}
+                                {idx < 4 ? row.ergCode : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.ergCode} onChange={e => updateDGField(idx, 'ergCode', e.target.value)} />}
                             </td>
-                            <td><input className="input-elem" value={row.uldId} onChange={e => updateDGField(idx, 'uldId', e.target.value)} /></td>
-                            <td><input className="input-elem" value={row.cptPos} onChange={e => updateDGField(idx, 'cptPos', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.uldId} onChange={e => updateDGField(idx, 'uldId', e.target.value)} /></td>
+                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.cptPos} onChange={e => updateDGField(idx, 'cptPos', e.target.value)} /></td>
                         </tr>
                     ))}
                 </tbody>
@@ -463,7 +496,7 @@ const MainForm = () => {
                         <textarea
                             className="evidence-ta"
                             value={generalInfo.evidenceText}
-                            onChange={e => setGeneralInfo({ ...generalInfo, evidenceText: e.target.value })}
+                            onChange={e => setGeneralInfo({ ...generalInfo, evidenceText: e.target.value.toUpperCase() })}
                         />
                     </div>
                     <div className="supervisor-sig-box">
@@ -471,14 +504,14 @@ const MainForm = () => {
                             LOADING SUPERVISOR'S<br />SIGNATURE
                         </div>
                         <div className="footer-sig-pad-box mini-sig">
-                            <SignaturePad />
+                            <SignaturePad ref={supervisorSigRef} />
                         </div>
                     </div>
                 </div>
                 <div className="footer-col center-sig">
                     <div className="footer-label-normal">Captains Signature:</div>
                     <div className="footer-sig-pad-box">
-                        <SignaturePad />
+                        <SignaturePad ref={captainSigRef} />
                     </div>
                 </div>
                 <div className="footer-col right-info">
@@ -486,7 +519,7 @@ const MainForm = () => {
                     <textarea
                         className="other-info-ta"
                         value={generalInfo.otherInfo}
-                        onChange={e => setGeneralInfo({ ...generalInfo, otherInfo: e.target.value })}
+                        onChange={e => setGeneralInfo({ ...generalInfo, otherInfo: e.target.value.toUpperCase() })}
                     />
                 </div>
             </div>
@@ -494,21 +527,21 @@ const MainForm = () => {
             <div className="dist-line-area">
                 <textarea
                     rows="1"
-                    style={{ width: '100%', border: 'none', textAlign: 'center', fontSize: '9px', background: '#fff', overflow: 'hidden' }}
+                    style={{ width: '100%', border: 'none', textAlign: 'center', fontSize: '11px', background: '#fff', overflow: 'hidden' }}
                     value={generalInfo.distributionText}
-                    onChange={e => setGeneralInfo({ ...generalInfo, distributionText: e.target.value })}
+                    onChange={e => setGeneralInfo({ ...generalInfo, distributionText: e.target.value.toUpperCase() })}
                 />
             </div>
 
             <div className="bottom-meta-row">
                 <div>
-                    <input value={generalInfo.revCode} onChange={e => setGeneralInfo({ ...generalInfo, revCode: e.target.value })} />
+                    <input value={generalInfo.revCode} onChange={e => setGeneralInfo({ ...generalInfo, revCode: e.target.value.toUpperCase() })} />
                 </div>
                 <div>
-                    <input value={generalInfo.docCode} onChange={e => setGeneralInfo({ ...generalInfo, docCode: e.target.value })} />
+                    <input value={generalInfo.docCode} onChange={e => setGeneralInfo({ ...generalInfo, docCode: e.target.value.toUpperCase() })} />
                 </div>
                 <div>
-                    <input value={generalInfo.footerDate} onChange={e => setGeneralInfo({ ...generalInfo, footerDate: e.target.value })} />
+                    <input value={generalInfo.footerDate} onChange={e => setGeneralInfo({ ...generalInfo, footerDate: e.target.value.toUpperCase() })} />
                 </div>
             </div>
 

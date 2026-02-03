@@ -304,13 +304,24 @@ th {
 
 .supervisor-sig-box {
   display: flex !important;
-  flex-direction: row !important;
+  flex-direction: column !important;
   align-items: flex-start;
-  gap: 15px;
-  padding: 0 5px 5px 0;
-  min-height: 300px;
-  /* Target space for signature */
+  gap: 10px;
+  padding: 5px;
+  min-height: 200px;
+  /* Reduced to 200px as requested */
   flex-grow: 1;
+}
+
+.supervisor-sig-box .footer-label-bold {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.supervisor-sig-box .footer-sig-pad-box {
+  width: 100%;
+  flex-grow: 1;
+  min-height: 150px;
 }
 
 .footer-col.vertical-split>div:first-child {
@@ -356,10 +367,7 @@ th {
 }
 
 .mini-sig {
-  margin-top: 10px;
-  height: auto !important;
-  /* Allow it to fill the container */
-  min-height: 250px;
+  /* Class no longer needed but kept for safety */
 }
 
 .footer-sig-pad-box {
@@ -374,8 +382,7 @@ th {
   padding: 2px 6px;
   display: flex;
   flex-direction: column;
-  min-height: 120px;
-  /* Reduced from previous stretched state */
+  min-height: 200px;
   height: auto;
 }
 

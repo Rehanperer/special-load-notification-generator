@@ -195,8 +195,31 @@ const MainForm = () => {
         // 2. Transform INPUTs to DIVs (Text Visibility Fix)
         const inputs = element.querySelectorAll('input');
         inputs.forEach(input => {
-            // SKIP hidden date inputs and hidden helper inputs
-            if (input.type === 'date' || input.style.opacity === '0' || input.style.zIndex === '1') {
+            // DETECT if it's the main date picker being removed or just a helper
+            if (input.type === 'date') {
+                const div = document.createElement('div');
+                div.textContent = generalInfo.date; // Use the formatted date
+                div.className = input.className;
+
+                // Styles for PDF
+                div.style.border = 'none';
+                div.style.background = 'transparent';
+                div.style.fontFamily = 'Arial, sans-serif';
+                div.style.fontSize = '17px';
+                div.style.textAlign = 'center';
+                div.style.width = '100%';
+                div.style.padding = '4px 0';
+                div.style.fontWeight = 'bold';
+                div.style.display = 'block';
+
+                if (input.parentNode) {
+                    input.parentNode.replaceChild(div, input);
+                }
+                return;
+            }
+
+            // SKIP hidden helper inputs
+            if (input.style.opacity === '0' || input.style.opacity === '0.01' || input.style.zIndex === '1') {
                 input.remove();
                 return;
             }
@@ -331,15 +354,28 @@ const MainForm = () => {
                     <div className="grid-cell">
                         <label>Date</label>
                         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                            <input
-                                value={generalInfo.date}
-                                readOnly
-                                onClick={() => datePickerRef.current?.showPicker()}
-                                style={{ cursor: 'pointer' }}
-                            />
+                            {/* Layer 1: Formatted Display (DD MMM YYYY) */}
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '17px',
+                                background: 'transparent',
+                                zIndex: 1,
+                                fontWeight: 'normal',
+                                pointerEvents: 'none',
+                                textTransform: 'uppercase'
+                            }}>
+                                {generalInfo.date}
+                            </div>
+                            {/* Layer 2: Transparent Native Input on Top */}
                             <input
                                 type="date"
-                                ref={datePickerRef}
                                 value={formatPickerDate(generalInfo.date)}
                                 onChange={(e) => handleDateChange(e.target.value)}
                                 style={{
@@ -348,9 +384,11 @@ const MainForm = () => {
                                     left: 0,
                                     width: '100%',
                                     height: '100%',
-                                    opacity: 0,
-                                    pointerEvents: 'auto',
-                                    zIndex: 1
+                                    opacity: 0.01, // Clickable but almost invisible
+                                    zIndex: 2,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    cursor: 'pointer'
                                 }}
                             />
                         </div>
@@ -501,9 +539,9 @@ const MainForm = () => {
                     </div>
                     <div className="supervisor-sig-box">
                         <div className="footer-label-bold">
-                            LOADING SUPERVISOR'S<br />SIGNATURE
+                            LOADING SUPERVISOR'S SIGNATURE
                         </div>
-                        <div className="footer-sig-pad-box mini-sig">
+                        <div className="footer-sig-pad-box">
                             <SignaturePad ref={supervisorSigRef} />
                         </div>
                     </div>

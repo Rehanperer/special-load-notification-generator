@@ -29,7 +29,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 3,
-        properShippingName: "Catridges, Small Arms",
+        properShippingName: "Cartridges, Small Arms",
         ergCode: "3L",
         unNumber: "0012",
         classOrDiv: "1.4S",
@@ -43,7 +43,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 4,
-        properShippingName: "Catridges, Power devices",
+        properShippingName: "Cartridges, Power devices",
         ergCode: "3L",
         unNumber: "0323",
         classOrDiv: "1.4S",

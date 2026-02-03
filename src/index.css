@@ -257,8 +257,13 @@ th {
   text-align: center;
   padding: 4px 0;
   height: auto;
-  /* Remove 100% */
+  min-height: 35px;
+  /* Ensure rows don't squash */
   text-transform: uppercase;
+}
+
+.no-highlight {
+  background: transparent !important;
 }
 
 .select-elem {
@@ -269,11 +274,28 @@ th {
   padding: 4px;
 }
 
+.shipping-name-display {
+  width: 100%;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: left;
+  padding: 4px;
+  background: var(--highlight-color);
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.3;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+}
+
 .row-autofill-info {
   text-align: left;
   padding-left: 2px;
   font-weight: bold;
   font-size: 12px;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 /* Footer structure v6 */

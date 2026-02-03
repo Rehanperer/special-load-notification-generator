@@ -141,6 +141,7 @@ const MainForm = () => {
                 unNumber: item.unNumber,
                 subRisk: item.subRisk,
                 pkgGroup: item.unPkgGroup,
+                code: item.dgrCode, // Autofill DGR Code
                 ergCode: item.ergCode,
                 selectedIdx: selectedIdx
             };
@@ -195,10 +196,14 @@ const MainForm = () => {
         // 2. Transform INPUTs to DIVs (Text Visibility Fix)
         const inputs = element.querySelectorAll('input');
         inputs.forEach(input => {
-            // DETECT if it's the main date picker being removed or just a helper
-            if (input.type === 'date') {
+            // DETECT if it's the main date picker
+            if (input.type === 'date' && input.parentElement && input.parentElement.style.position === 'relative') {
+                // Find and remove the existing display-only date div to prevent overlap in PDF
+                const existingDisplay = input.parentElement.querySelector('div');
+                if (existingDisplay) existingDisplay.remove();
+
                 const div = document.createElement('div');
-                div.textContent = generalInfo.date; // Use the formatted date
+                div.textContent = generalInfo.date;
                 div.className = input.className;
 
                 // Styles for PDF
@@ -218,8 +223,8 @@ const MainForm = () => {
                 return;
             }
 
-            // SKIP hidden helper inputs
-            if (input.style.opacity === '0' || input.style.opacity === '0.01' || input.style.zIndex === '1') {
+            // SKIP hidden helper inputs or standard date inputs
+            if (input.type === 'date' || input.style.opacity === '0' || input.style.opacity === '0.01' || input.style.zIndex === '1') {
                 input.remove();
                 return;
             }
@@ -441,11 +446,26 @@ const MainForm = () => {
                         <tr key={`dg-${idx}`}>
                             <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.unloadingStation} onChange={e => updateDGField(idx, 'unloadingStation', e.target.value)} /></td>
                             <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.awbNumber} onChange={e => updateDGField(idx, 'awbNumber', e.target.value)} /></td>
-                            <td style={{ textAlign: 'left' }}>
+                            <td style={{ textAlign: 'left', padding: '4px' }}>
                                 {idx < 4 ? (
-                                    <>
+                                    <div style={{ position: 'relative', width: '100%', minHeight: '30px', display: 'flex', alignItems: 'center' }}>
+                                        {/* Layer 1: Display with Wrapping */}
+                                        <div className="shipping-name-display">
+                                            {row.shippingName || "SELECT SHIPPING NAME"}
+                                        </div>
+                                        {/* Layer 2: Transparent Select on Top */}
                                         <select
                                             className="select-elem no-print"
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                opacity: 0,
+                                                zIndex: 2,
+                                                cursor: 'pointer'
+                                            }}
                                             value={row.selectedIdx}
                                             onChange={e => handleDGSelect(idx, e.target.value)}
                                         >
@@ -454,8 +474,7 @@ const MainForm = () => {
                                                 <option key={item.index} value={item.index}>{item.properShippingName.toUpperCase()}</option>
                                             ))}
                                         </select>
-                                        <div className="row-autofill-info print-only">{row.shippingName}</div>
-                                    </>
+                                    </div>
                                 ) : (
                                     <input
                                         className="input-elem no-caps"
@@ -480,7 +499,17 @@ const MainForm = () => {
                             <td>
                                 {idx < 4 ? row.pkgGroup : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.pkgGroup} onChange={e => updateDGField(idx, 'pkgGroup', e.target.value)} />}
                             </td>
-                            <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.code} onChange={e => updateDGField(idx, 'code', e.target.value)} /></td>
+                            <td>
+                                {idx < 4 ? (
+                                    <div className="input-elem no-highlight">{row.code}</div>
+                                ) : (
+                                    <input
+                                        className="input-elem no-caps"
+                                        value={row.code}
+                                        onChange={e => updateDGField(idx, 'code', e.target.value)}
+                                    />
+                                )}
+                            </td>
                             <td><input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.cao} onChange={e => updateDGField(idx, 'cao', e.target.value)} /></td>
                             <td>
                                 {idx < 4 ? row.ergCode : <input className={`input-elem ${idx === 4 ? 'no-caps' : ''}`} value={row.ergCode} onChange={e => updateDGField(idx, 'ergCode', e.target.value)} />}

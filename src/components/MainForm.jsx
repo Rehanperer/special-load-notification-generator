@@ -210,7 +210,7 @@ const MainForm = () => {
                 div.style.border = 'none';
                 div.style.background = 'transparent';
                 div.style.fontFamily = 'Arial, sans-serif';
-                div.style.fontSize = '17px';
+                div.style.fontSize = '20px';
                 div.style.textAlign = 'center';
                 div.style.width = '100%';
                 div.style.padding = '4px 0';
@@ -239,7 +239,7 @@ const MainForm = () => {
             div.style.background = 'transparent';
             div.style.backgroundColor = 'transparent';
             div.style.fontFamily = 'Arial, sans-serif';
-            div.style.fontSize = input.style.fontSize || '13px';
+            div.style.fontSize = input.style.fontSize || '25px';
             div.style.textAlign = input.style.textAlign || 'center';
             div.style.width = '100%';
             div.style.padding = '4px 0';
@@ -264,7 +264,7 @@ const MainForm = () => {
             div.style.background = 'transparent';
             div.style.backgroundColor = 'transparent';
             div.style.fontFamily = 'Arial, sans-serif';
-            div.style.fontSize = '12px';
+            div.style.fontSize = '15px';
             div.style.width = '100%';
             div.style.height = 'auto';
             div.style.overflow = 'visible';
@@ -317,18 +317,28 @@ const MainForm = () => {
         document.body.removeChild(container);
 
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdf = new jsPDF('l', 'mm', 'a4'); // 'l' for landscape
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
 
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
-        const ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
+
+        // Use a 5mm margin for all sides
+        const margin = 5;
+        const availableWidth = pdfWidth - (margin * 2);
+        const availableHeight = pdfHeight - (margin * 2);
+
+        const ratio = Math.min(availableWidth / canvasWidth, availableHeight / canvasHeight);
 
         const finalWidth = canvasWidth * ratio;
         const finalHeight = canvasHeight * ratio;
 
-        pdf.addImage(imgData, 'JPEG', (pdfWidth - finalWidth) / 2, 5, finalWidth, finalHeight - 5);
+        // Center horizontally and place at top margin
+        const xPos = (pdfWidth - finalWidth) / 2;
+        const yPos = margin;
+
+        pdf.addImage(imgData, 'JPEG', xPos, yPos, finalWidth, finalHeight);
         pdf.save(`Special_Load_Notification_${generalInfo.flightNumber || 'Form'}.pdf`);
     };
 
@@ -451,7 +461,7 @@ const MainForm = () => {
                                     <div style={{ position: 'relative', width: '100%', minHeight: '30px', display: 'flex', alignItems: 'center' }}>
                                         {/* Layer 1: Display with Wrapping */}
                                         <div className="shipping-name-display">
-                                            {row.shippingName || "SELECT SHIPPING NAME"}
+                                            {row.shippingName || ""}
                                         </div>
                                         {/* Layer 2: Transparent Select on Top */}
                                         <select

@@ -183,7 +183,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 14,
-        properShippingName: "Refrigerant Gas,n.o.s",
+        properShippingName: "Refrigerant Gas",
         ergCode: "2L",
         unNumber: "1078",
         classOrDiv: "2.2",
@@ -211,7 +211,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 16,
-        properShippingName: "Paint (including paint, lacquer, enamel, stain, shellac, varnish, polish, liquid filler and liquid lacquer base)",
+        properShippingName: "Paint products",
         ergCode: "3L",
         unNumber: "1263",
         classOrDiv: "3",
@@ -267,7 +267,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 20,
-        properShippingName: "Lithium ion batteries contained in equipment (including lithium ion polymer batteries)",
+        properShippingName: "Lithium ion batteries contained in equipment",
         ergCode: "12FZ",
         unNumber: "3481",
         classOrDiv: "9",
@@ -281,7 +281,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 21,
-        properShippingName: "Lithium ion batteries packed with equipment (including lithium ion polymer batteries)",
+        properShippingName: "Lithium ion batteries packed with equipment",
         ergCode: "12FZ",
         unNumber: "3481",
         classOrDiv: "9",
@@ -295,7 +295,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 22,
-        properShippingName: "Lithium metal batteries contained in equipment (including lithium alloy batteries)",
+        properShippingName: "Lithium metal batteries contained in equipment",
         ergCode: "12FZ",
         unNumber: "3091",
         classOrDiv: "9",
@@ -309,7 +309,7 @@ export const dangerousGoodsList = [
     },
     {
         index: 23,
-        properShippingName: "Lithium metal batteries packed with equipment (including lithium alloy batteries)",
+        properShippingName: "Lithium metal batteries packed with equipment",
         ergCode: "12FZ",
         unNumber: "3091",
         classOrDiv: "9",

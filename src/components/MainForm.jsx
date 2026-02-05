@@ -125,11 +125,22 @@ const MainForm = () => {
     const clearDangerousGoodsRow = (idx) => {
         const newDG = [...dangerousGoods];
         newDG[idx] = {
-            stationUnloading: '', airWaybillNumber: '', shippingName: '',
-            classOrDivision: '', unIdNumber: '', subRisk: '',
-            numberOfPackages: '', netQuantity: '', radioactiveCategory: '-',
-            packingGroup: '', caoOrPax: '', erg: '',
-            loadedUldId: '', loadedPosition: ''
+            unloadingStation: '',
+            awbNumber: '',
+            shippingName: '',
+            classDiv: '',
+            unNumber: '',
+            subRisk: '',
+            pkgCount: '',
+            netQty: '',
+            radioCat: '-',
+            pkgGroup: '',
+            code: '',
+            cao: '',
+            ergCode: '',
+            uldId: '',
+            cptPos: '',
+            selectedIdx: ''
         };
         setDangerousGoods(newDG);
     };
@@ -137,9 +148,15 @@ const MainForm = () => {
     const clearOtherLoadRow = (idx) => {
         const newOther = [...otherLoads];
         newOther[idx] = {
-            stationUnloading: '', airWaybillNumber: '', contents: '',
-            numberOfPackages: '', quantity: '', supplementaryInfo: '',
-            codeReverse: '', uldId: '', position: ''
+            unloadingStation: '',
+            awbNumber: '',
+            description: '',
+            pkgCount: '',
+            quantity: '',
+            suppInfo: '',
+            code: '',
+            uldId: '',
+            cptPos: ''
         };
         setOtherLoads(newOther);
     };

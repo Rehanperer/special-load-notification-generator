@@ -1,0 +1,108 @@
+/* Context Menu Styles */
+.context-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    z-index: 9998;
+}
+
+.context-menu {
+    position: fixed;
+    z-index: 9999;
+    background: var(--form-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow-color), 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: contextMenuIn 0.2s ease;
+    min-width: 150px;
+}
+
+@keyframes contextMenuIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -100%) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -100%) scale(1);
+    }
+}
+
+.context-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-align: left;
+}
+
+.context-menu-item:hover {
+    background: var(--highlight-solid);
+}
+
+.context-menu-item:active {
+    transform: scale(0.98);
+}
+
+.context-menu-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.context-menu-danger {
+    color: #dc3545;
+}
+
+.context-menu-danger:hover {
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.context-menu-icon {
+    font-size: 18px;
+}
+
+/* Swipe Row Indicator */
+.swipe-row {
+    position: relative;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.swipe-row.swiping-left {
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.swipe-row.swiping-right {
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.swipe-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.swipe-indicator.left {
+    right: 10px;
+    color: #dc3545;
+}
+
+.swipe-indicator.right {
+    left: 10px;
+    color: #28a745;
+}
